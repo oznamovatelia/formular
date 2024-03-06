@@ -1,0 +1,121 @@
+server.port: 9000
+
+app:
+  aesKey:
+    fileName: ./BOOT-INF/classes/link-aes.p12  #  cesta k súboru s aes kľúčom
+    keyPassword: keystorePassword
+    storePassword: keystorePassword
+    alias: link
+  captcha:
+    site:
+    secret:
+  pgpPublicKeyFilename: ./BOOT-INF/classes/pgp_public.asc #d:/tmp/pgp_public.asc - cesta k súboru s pgp kľúčom
+  sendEncryptedFormTo: zmenit@todo.sk  # mailove adresy oddelene čiarkou test1@test.sk,test2@test.sk  # alebo premenna prostredia APP_SEND_ENCRYPTED_FORM_TO
+  baseUrl: # V produkcii nebude možné “vypočítať” túto URL, lebo kontajner bude za gateway. Pokial je prazdna bude vypocitana
+  #  baseUrlTorMail: http://localhost:9001 # url kde beží aplikácia s profilom torMail - pre posielanie tor mailov
+  baseUrlTorMail: # Pokiaľ onionmail nie je nasadený tak nastaviť baseUrlTorMail prazdne. -> Na úvodnom formulari sa bude vykonávať kontrolu, že nie je zadaná onion mail adresa
+  env: # Prostredie na ktorom beží aplikácia. Ak je prazdne jedná sa o produkciu. Pokial je hodnota vyplnená ide o test prostredie a formular bude obsahovať info. o prostredí
+  rateLimitSchedulerDelay: 60000 # Perioda v akej sa kontroluje zoznam s mailami. (The time unit is milliseconds)
+  rateLimitSchedulerMaxDelay: 300 # čas po akoom sa mail vyhodí zo zoznamu (sekundy)
+  torMail:
+    username:
+    password:
+    host:
+    port:
+    from:
+  mailFrom: noreply@todo.sk
+  timeBetweenLinkRequests: 2 # čas po akom je možné znovu požiadať o link (minúty)
+  linkTimeValidiry: 60 # ćasová platnosť linku - čas za ktorý je možné link použíť (minúty)
+  proxy:
+    host: empty
+    port:
+  maxMailSize: 10485760 # 10MB maximálna velkosť prilohy v maily. Pokial je prekročená tak priloha sa rozdeli do viacerých zip suborov. Každý súbor je poslany v samostatnom maily.
+
+org.tbk.tor:
+  enabled: true  # default is `true`
+  autoPublishEnabled: true # default is `true`
+  working-directory: 'tor-working-dir'
+  startup-timeout: 30s # default is `60s`
+
+spring:
+  resources:
+    add-mappings: false
+  servlet:
+    multipart:
+      file-size-threshold: 50MB
+      location: /tmp
+      max-file-size: 250MB
+      max-request-size: 250MB
+  mail:
+    default-encoding: UTF-8
+    host: smtp.todo.sk
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+    protocol: smtp
+    test-connection: false
+  web:
+    resources:
+      static-locations: classpath:/uoo_webres/static/
+  thymeleaf:
+    prefix: classpath:/uoo_webres/templates/
+
+
+# vypnute logovanie
+logging:
+  level:
+    root: OFF
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+  #    prefix: file:src/main/resources/templates/
+  resources: # Static resources
+    #    static-locations: file:src/main/resources/static/
+    servlet:
+      multipart:
+        location: D:/temp
+  web:
+    resources:
+      cache:
+        period: 0
+
+logging:
+  level:
+    root: INFO
+
+app:
+  aesKey:
+    fileName: ./server/src/main/resources/link-aes.p12 #d:/tmp/link-aes.p12  - cesta k súboru s aes kľúčom
+  sendEncryptedFormTo: todo@todo.sk
+  pgpPublicKeyFilename: ./server/src/main/resources/pgp_public.asc #d:/tmp/pgp_public.asc
+  torMail:
+    username: test
+    password: password
+    host: host
+    port:
+    from: todo@todo.onion
+
+---
+spring:
+  config:
+    activate:
+      on-profile: torMail
+
+server.port: 9001
+
+org.tbk.tor:
+  enabled: true  # default is `true`
+  autoPublishEnabled: true # default is `true`
+  working-directory: 'tor-working-dir2' # default is `tor-working-dir`
+  startup-timeout: 30s # default is `60s`
+

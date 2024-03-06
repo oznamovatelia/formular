@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="sk">
+<head lang="sk">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="${@appProps.getBaseUrl() + '/css/bootstrap.min.css'}">
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+
+    <script th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/jquery-3.6.0.min.js" th:src="${@appProps.getBaseUrl() + '/js/jquery-3.6.0.min.js'}"></script>
+    <script th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/jquery-3.6.0.min.js" th:src="@{/js/jquery-3.6.0.min.js}"></script>
+
+    <script th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/bootstrap.bundle.min.js"
+            th:src="${@appProps.getBaseUrl() + '/js/bootstrap.bundle.min.js'}"></script>
+    <script th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <title>Formulár - email</title>
+    <script type="module" src="https://unpkg.com/friendly-challenge@0.9.5/widget.module.min.js" async defer></script>
+    <script nomodule src="https://unpkg.com/friendly-challenge@0.9.5/widget.min.js" async defer></script>
+
+    <script th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/kendo.all.min.js" th:src="${@appProps.getBaseUrl() + '/js/kendo.all.min.js'}"></script>
+    <script th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/kendo.all.min.js" th:src="@{/js/kendo.all.min.js}"></script>
+
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/kendo_theme_gray.min.css" th:href="${@appProps.getBaseUrl() + '/css/kendo_theme_gray.min.css'}">
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/kendo_theme_gray.min.css" th:href="@{/css/kendo_theme_gray.min.css}">
+
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/base.css" th:href="${@appProps.getBaseUrl() + '/css/base.css'}"/>
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/base.css" th:href="@{/css/base.css}"/>
+
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="shortcut icon" href="../static/favicon.ico" th:href="${@appProps.getBaseUrl() + '/favicon.ico'}"/>
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="shortcut icon" href="../static/favicon.ico" th:href="@{/favicon.ico}"/>
+
+</head>
+
+<body>
+
+<noscript>You need Javascript for CAPTCHA verification to submit this form.</noscript>
+
+
+<div th:if="${!#strings.isEmpty(form.env)}" class=" pt-2 pb-1" style="background-color: yellow; text-align: center;">
+    <h1 th:text="'Používate ' + ${form.env} + ' prostredie.'"></h1>
+</div>
+
+<div class="container">
+    <div class="row py-3">
+        <div class="col-lg-4 pl-lg-0">
+            <div th:if="${form.tor}">
+                <p th:text="#{tor.text}"></p>
+            </div>
+        </div>
+        <div class="col-lg-6 p-lg-0">
+            <a href="#" class="lang-button float-right" th:if="${lang=='en'}" onclick="window.location.replace('mail?lang=sk' );">SK</a>
+            <a href="#" class="lang-button float-right" th:unless="${lang=='en'}" onclick="window.location.replace('mail?lang=en' );">EN</a>
+        </div>
+        <div class="col-lg-2 p-lg-0"></div>
+    </div>
+
+    <div class="row py-3 hr-top">
+        <div class="col-lg-4 pl-lg-0 pr-5">
+            <h4><span th:text="#{form.mail.text.left}"/></h4>
+        </div>
+        <div class="col-lg-6 p-lg-0">
+            <p th:text="#{form.mail.text}"></p>
+        </div>
+        <div class="col-lg-2 p-lg-0"></div>
+    </div>
+
+    <form id="idForm" action="/formMail" th:action="${form.formAction}" th:object="${form}" method="post" class="" enctype="multipart/form-data">
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+            </div>
+            <div class="col-lg-6 p-lg-0">
+                <input type="email" th:field="*{email}" placeholder="Email *" size="40" required/>
+                <div th:if="${!#strings.isEmpty(emailError)}" id="emailError" th:text="${emailError}" style="color: red;"></div>
+            </div>
+
+            <div class="col-lg-2 p-lg-0"></div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+            </div>
+            <div class="col-lg-6 p-lg-0">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="frc-captcha " data-sitekey="FCMG3GQNR1DAEFS1" th:attr="data-sitekey=${@appProps.captcha.getSite()}"></div>
+                        <div th:if="${!#strings.isEmpty(captchaError)}" id="captchaError" th:text="${captchaError}" style="color: red;"></div>
+                    </div>
+                    <div class="col-lg-6 p-lg-0 text-right">
+                        <input id="idSubmit" type="submit" th:value="#{form.mail.submit}" value="Chcem pokračovať!!">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 p-lg-0"></div>
+        </div>
+    </form>
+
+    <div class="row py-3 hr-top">
+        <div class="col-lg-4 pl-lg-0">
+        </div>
+        <div class="col-lg-6 p-lg-0">
+            <p>
+                <span th:text="#{form.mail.info}"></span>
+                <a th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" th:href="${@appProps.getBaseUrl() + '/pdf/Odporucania_pre_zvysenie_bezpecnosti.pdf'}" target="_blank">
+                    <strong><span th:text="#{form.mail.prirucka}"></span></strong>
+                </a>
+                <a th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" th:href="@{/pdf/Odporucania_pre_zvysenie_bezpecnosti.pdf}" target="_blank">
+                    <strong><span th:text="#{form.mail.prirucka}"></span></strong>
+                </a>
+            </p>
+            <p>
+                <span th:text="#{form.mail.infoOsUdaje}"></span>
+                <a href="https://www.oznamovatelia.sk/ochrana-osobnych-udajov/"><strong><span th:text="#{form.mail.infoOsUdajeSpracovanie}"></span></strong></a>.
+            </p>
+        </div>
+        <div class="col-lg-2 p-lg-0"></div>
+    </div>
+</div>
+
+<script>
+document.getElementById("idForm").addEventListener("submit", mySubmit);
+function mySubmit() {
+    $("#idSubmit").attr('disabled', 'disabled');
+    kendo.ui.progress($("body"), true);
+    $("body").css('overflow','hidden');
+}
+</script>
+
+
+</body>
+</html>

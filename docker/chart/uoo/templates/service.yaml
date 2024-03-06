@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+{{/*  name: {{ include "uoo.fullname" . }}*/}}
+  name: {{ .Values.service.name }}
+  labels:
+    {{- include "uoo.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      {{/*      targetPort: http*/}}
+      targetPort: {{ .Values.service.port }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "uoo.selectorLabels" . | nindent 4 }}

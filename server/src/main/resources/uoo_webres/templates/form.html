@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="sk">
+<head>
+
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="${@appProps.getBaseUrl() + '/css/bootstrap.min.css'}">
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+
+    <script th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/jquery-3.6.0.min.js" th:src="${@appProps.getBaseUrl() + '/js/jquery-3.6.0.min.js'}"></script>
+    <script th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/jquery-3.6.0.min.js" th:src="@{/js/jquery-3.6.0.min.js}"></script>
+
+    <script th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/bootstrap.bundle.min.js"
+            th:src="${@appProps.getBaseUrl() + '/js/bootstrap.bundle.min.js'}"></script>
+    <script th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <script th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/kendo.all.min.js" th:src="${@appProps.getBaseUrl() + '/js/kendo.all.min.js'}"></script>
+    <script th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/kendo.all.min.js" th:src="@{/js/kendo.all.min.js}"></script>
+    <script th:if="${!#strings.isEmpty(@appProps.getBaseUrl()) }" src="../static/js/kendo.messages.sk-SK.min.js"
+            th:src="${@appProps.getBaseUrl() + '/js/kendo.messages.sk-SK.min.js'}"></script>
+    <script th:if="${#strings.isEmpty(@appProps.getBaseUrl()) }" src="../static/js/kendo.messages.sk-SK.min.js" th:src="@{/js/kendo.messages.sk-SK.min.js}"></script>
+    <script th:if="${!#strings.isEmpty(@appProps.getBaseUrl()) && lang=='en'}" src="../static/js/kendo.messages.en-US.min.js"
+            th:src="${@appProps.getBaseUrl() + '/js/kendo.messages.en-US.min.js'}"></script>
+    <script th:if="${#strings.isEmpty(@appProps.getBaseUrl()) && lang=='en'}" src="../static/js/kendo.messages.en-US.min.js" th:src="@{/js/kendo.messages.en-US.min.js}"></script>
+
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/kendo_theme_gray.min.css" th:href="${@appProps.getBaseUrl() + '/css/kendo_theme_gray.min.css'}">
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/kendo_theme_gray.min.css" th:href="@{/css/kendo_theme_gray.min.css}">
+
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/base.css" th:href="${@appProps.getBaseUrl() + '/css/base.css'}"/>
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/base.css" th:href="@{/css/base.css}"/>
+
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="shortcut icon" href="../static/favicon.ico" th:href="${@appProps.getBaseUrl() + '/favicon.ico'}"/>
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="shortcut icon" href="../static/favicon.ico" th:href="@{/favicon.ico}"/>
+
+    <title>Formulár</title>
+
+    <!--    friendly captcha -->
+    <script type="module" src="https://unpkg.com/friendly-challenge@0.9.5/widget.module.min.js" async defer></script>
+    <script nomodule src="https://unpkg.com/friendly-challenge@0.9.5/widget.min.js" async defer></script>
+</head>
+
+<body>
+
+<div th:if="${!#strings.isEmpty(form.env)}" class=" pt-2 pb-1" style="background-color: yellow; text-align: center;">
+    <h1 th:text="'Používate ' + ${form.env} + ' prostredie.'"></h1>
+</div>
+
+<div class="container">
+    <div class="row py-3">
+        <div class="col-lg-4 pl-lg-0 pr-5">
+            <div th:if="${form.tor}">
+                <p th:text="#{tor.text}"></p>
+            </div>
+        </div>
+        <div class="col-lg-6 p-lg-0 text-right">
+            <a href="#" class="lang-button float-right" th:if="${lang=='en'}" onclick="langFnc('sk' );">SK</a>
+            <a href="#" class="lang-button float-right" th:unless="${lang=='en'}" onclick="langFnc('en' );">EN</a>
+        </div>
+        <div class="col-lg-2 p-lg-0">
+        </div>
+    </div>
+
+    <div class="row py-3 hr-top">
+        <div class="col-lg-4 pl-lg-0 pr-5">
+            <h4>
+                <span th:text="#{form.text.left}"/>
+            </h4>
+        </div>
+        <div class="col-lg-6 p-lg-0">
+            <p><span th:text="#{form.text00_1}"/>
+                <strong><span th:text="#{form.text00_2}"/></strong>
+                <span th:text="#{form.text00_3}"/>
+            </p>
+        </div>
+        <div class="col-lg-2 p-lg-0">
+        </div>
+    </div>
+
+    <form id="idForm" action="/form" th:action="${form.formAction}" th:object="${form}" method="post" enctype="multipart/form-data" class="needs-validation">
+        <div style="display: none;">
+            <input th:field="*{nonce}" type="hidden" readonly/>
+            <input th:field="*{email}" type="hidden" readonly/>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">01</h4>
+            </div>
+            <div class="col-lg-6 p-lg-0">
+                <p class="m-0" style="text-align: justify;"><span th:text="#{form.text01_1}"/></p>
+                <p class="mt-2 mb-0"><small><span th:text="#{form.text01_3}"/></small></p>
+
+                <div class="row my-3">
+                    <div class="custom-control custom-radio pl-5">
+                        <input th:field="*{infNekalaPraktikaSuvislostVasaPraca}" type="radio" id="vasaPraca1" class="custom-control-input" name="vasaPraca" th:value="#{ano}" required/>
+                        <label class="custom-control-label" for="vasaPraca1"><span th:text="#{ano}"/></label>
+                    </div>
+                    <div class="custom-control custom-radio pl-5">
+                        <input th:field="*{infNekalaPraktikaSuvislostVasaPraca}" type="radio" id="vasaPraca2" class="custom-control-input" name="vasaPraca" th:value="#{nie}" required/>
+                        <label class="custom-control-label" for="vasaPraca2"><span th:text="#{nie}"/></label>
+                    </div>
+                </div>
+                <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+            </div>
+            <div class="col-lg-2 p-lg-0">
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">02</h4>
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-9 p-lg-0">
+                        <p class="m-0" style="text-align: justify;"><span th:text="#{form.text02_1}"/></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+
+                    <textarea th:field="*{identifikacia}" rows="2" required class="form-control my-3 col-lg-9 mx-3 mx-lg-0"></textarea>
+                    <div class="invalid-feedback col-lg-3"><span class="invalid-position" th:text="#{form.prosim.vyplnte.pole}"/></div>
+
+                    <div class="col-lg-9 p-lg-0">
+                        <div class="valid-feedback">&nbsp;</div>
+                        <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">03</h4>
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-9 p-lg-0">
+                        <p class="m-0" style="text-align: justify;"><span th:text="#{form.text03_1}"/></p>
+                        <p class="mt-2 mb-0"><small><span th:text="#{form.text03_2}"/></small></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+
+                    <textarea th:field="*{opisNekalejPraktiky}" rows="6" required class="form-control my-3 col-lg-9 mx-3 mx-lg-0"></textarea>
+                    <div class="invalid-feedback col-lg-3"><span class="invalid-position" th:text="#{form.prosim.vyplnte.pole}"/></div>
+
+                    <div class="col-lg-9 p-lg-0">
+                        <div class="valid-feedback">&nbsp;</div>
+                        <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">04</h4>
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-9 p-lg-0">
+                        <p class="m-0" style="text-align: justify;"><span th:text="#{form.text04_1}"/></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+
+                    <textarea th:field="*{popisOhrozenieVerejnyZaujem}" rows="2" required class="form-control my-3 col-lg-9 mx-3 mx-lg-0"></textarea>
+                    <div class="invalid-feedback col-lg-3"><span class="invalid-position" th:text="#{form.prosim.vyplnte.pole}"/></div>
+
+                    <div class="col-lg-9 p-lg-0">
+                        <div class="valid-feedback">&nbsp;</div>
+                        <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">05</h4>
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-9 p-lg-0">
+                        <p class="m-0" style="text-align: justify;"><span th:text="#{form.text05_1}"/></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+
+                    <textarea th:field="*{kedyAkoDlho}" rows="2" required class="form-control my-3 col-lg-9 mx-3 mx-lg-0"></textarea>
+                    <div class="invalid-feedback col-lg-3"><span class="invalid-position" th:text="#{form.prosim.vyplnte.pole}"/></div>
+
+                    <div class="col-lg-9 p-lg-0">
+                        <div class="valid-feedback">&nbsp;</div>
+                        <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">06</h4>
+            </div>
+            <div class="col-lg-6 p-lg-0">
+                <p class="m-0" style="text-align: justify;"><span th:text="#{form.text06_1}"/></p>
+                <p class="mt-2 mb-0"><small><span th:text="#{form.text06_2}"/></small></p>
+                <p class="m-0"><small><span th:text="#{form.text06_3}"/></small></p>
+
+                <div class="row my-3">
+                    <div class="custom-control custom-radio pl-5">
+                        <input th:field="*{dokumentyKDispozicii}" type="radio" id="dokumenty1" class="custom-control-input" name="dokumenty" th:value="#{ano}" required/>
+                        <label class="custom-control-label" for="dokumenty1"><span th:text="#{ano}"/></label>
+                    </div>
+                    <div class=" custom-control custom-radio pl-5 ">
+                        <input th:field="*{dokumentyKDispozicii}" type="radio" id="dokumenty2" class="custom-control-input" name="dokumenty" th:value="#{nie}" required/>
+                        <label class="custom-control-label" for="dokumenty2"><span th:text="#{nie}"/></label>
+                    </div>
+                </div>
+                <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+            </div>
+            <div class="col-lg-2 p-lg-0">
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">07</h4>
+            </div>
+            <div class="col-lg-6 p-lg-0">
+                <p class="m-0" style="text-align: justify;"><span th:text="#{form.text07_1}"/></p>
+
+                <div class="row my-3">
+                    <div class="col-12">
+                        <label class="form-check-label my-1 d-inline-flex">
+                            <input class="form-check-input" type="checkbox" name="oznamenieZamestnavatel" th:checked="*{oznamenieZamestnavatel}" th:value="#{form.text07_2}"/>
+                            <span class="pt-2" th:text="#{form.text07_2}"/>
+                        </label>
+
+                        <label class="form-check-label my-1 d-inline-flex">
+                            <input class="form-check-input" type="checkbox" name="oznamenieNaPoliciu" th:checked="*{oznamenieNaPoliciu}" th:value="#{form.text07_3}"/>
+                            <span class="pt-md-2" th:text="#{form.text07_3}"/>
+                        </label>
+
+                        <label class="form-check-label my-1 d-inline-flex">
+                            <input class="form-check-input" type="checkbox" name="oznamenieInyOrgan" th:checked="*{oznamenieInyOrgan}" th:value="#{form.text07_4}"/>
+                            <span class="pt-md-2" th:text="#{form.text07_4}"/>
+                        </label>
+                    </div>
+                </div>
+
+                <p><span th:text="#{form.text07_5}"/></p>
+                <p><input style="width:100%;" th:field="*{oznamenieInyOrganPopis}" type="text"></p>
+
+                <label class="form-check-label my-1 d-inline-flex">
+                    <input class="form-check-input" type="checkbox" name="oznamenieNie" th:checked="*{oznamenieNie}" th:value="#{nie}"/>
+                    <span class="pt-2" th:text="#{nie}"/>
+                </label>
+
+                <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+            </div>
+            <div class="col-lg-2 p-lg-0">
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">08</h4>
+            </div>
+            <div class="col-lg-6 p-lg-0">
+                <p class="m-0" style="text-align: justify;"><span th:text="#{form.text08_1}"/></p>
+                <p class="mt-2 mb-0"><small><span th:text="#{form.text08_2}"/></small></p>
+
+                <textarea th:field="*{akoPresetrene}" rows="4" class="form-control my-3"></textarea>
+
+            </div>
+            <div class="col-lg-2 p-lg-0">
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">09</h4>
+            </div>
+            <div class="col-lg-6 p-lg-0">
+                <p class="m-0" style="text-align: justify;"><span th:text="#{form.text09_1}"/></p>
+                <p class="mt-2 mb-0"><small><span th:text="#{form.text09_2}"/></small></p>
+
+                <div class="row my-3">
+                    <div class="custom-control custom-radio pl-5">
+                        <input th:field="*{odvetneOpatrenia}" type="radio" id="odvetneOpatrenia1" class="custom-control-input" name="odvetneOpatrenia" th:value="#{ano}" required/>
+                        <label class="custom-control-label" for="odvetneOpatrenia1"><span th:text="#{ano}"/></label>
+                    </div>
+                    <div class="custom-control custom-radio pl-5">
+                        <input th:field="*{odvetneOpatrenia}" type="radio" id="odvetneOpatrenia2" class="custom-control-input" name="odvetneOpatrenia" th:value="#{nie}" required/>
+                        <label class="custom-control-label" for="odvetneOpatrenia2"><span th:text="#{nie}"/></label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <textarea style="width:100%" th:field="*{popisOdvetneOpatrenia}" rows="4" class="form-control"></textarea>
+                    </div>
+                </div>
+                <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+            </div>
+            <div class="col-lg-2 p-lg-0">
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">10</h4>
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-9 p-lg-0">
+                        <p class="m-0" style="text-align: justify;"><span th:text="#{form.text10_1}"/></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+
+                    <textarea th:field="*{popisOcakavania}" rows="2" required class="form-control my-3 col-lg-9 mx-3 mx-lg-0"></textarea>
+                    <div class="invalid-feedback col-lg-3"><span class="invalid-position" th:text="#{form.prosim.vyplnte.pole}"/></div>
+
+                    <div class="col-lg-9 p-lg-0">
+                        <div class="valid-feedback">&nbsp;</div>
+                        <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">11</h4>
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-9 p-lg-0">
+                        <p class="m-0" style="text-align: justify;"><span th:text="#{form.text11_1}"/></p>
+                        <p class="mt-2 mb-0"><small><span th:text="#{form.text11_2}"/></small></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+
+                    <textarea th:field="*{dozvedenieOUrade}" rows="2" required class="form-control my-3 col-lg-9 mx-3 mx-lg-0"></textarea>
+                    <div class="invalid-feedback col-lg-3"><span class="invalid-position" th:text="#{form.prosim.vyplnte.pole}"/></div>
+
+                    <div class="col-lg-9 p-lg-0">
+                        <div class="valid-feedback">&nbsp;</div>
+                        <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+                    </div>
+                    <div class="col-lg-3 p-lg-0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">12</h4>
+            </div>
+            <div class="col-lg-6 p-lg-0">
+                <p class="m-0" style="text-align: justify;"><span th:text="#{form.text12_1}"/></p>
+                <p class="mt-2 mb-0"><small><span th:text="#{form.text12_2}"/></small></p>
+
+                <div class="row my-3">
+                    <div class="custom-control custom-radio pl-5">
+                        <input type="radio" class="custom-control-input" id="suhlasSpr1" th:field="*{suhlasSpristupnenie}" name="suhlasSpristupnenie" th:value="#{ano}" required/>
+                        <label class="custom-control-label" for="suhlasSpr1"><span th:text="#{ano}"/></label>
+                    </div>
+                    <div class="custom-control custom-radio pl-5">
+                        <input type="radio" class="custom-control-input" id="suhlasSpr2" th:field="*{suhlasSpristupnenie}" name="suhlasSpristupnenie" th:value="#{nie}" required>
+                        <label class="custom-control-label" for="suhlasSpr2"><span th:text="#{nie}"/></label>
+                    </div>
+                </div>
+                <p class="m-0"><small><span th:text="#{form.povinna.otazka}"/></small></p>
+            </div>
+
+            <div class="col-lg-2 p-lg-0">
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">13</h4>
+            </div>
+            <div class="col-lg-6 p-lg-0">
+                <p class="m-0" style="text-align: justify;"><span th:text="#{form.text13_1}"/></p>
+                <p class="mt-2 mb-0"><small><span th:text="#{form.text13_2}"/></small></p>
+                <p class="m-0"><small><span th:text="#{form.text13_3}"/></small></p>
+
+                <div class="row my-3">
+                    <div class="col-12">
+                        <label><p class="m-0" th:text="#{form.text13_4}"/></label>
+                        <input style="width:100%;" th:field="*{meno}" type="text"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label><p class="m-0" th:text="#{form.text13_5}"/></label>
+                        <input style="width:100%;" th:field="*{telefon}" name="telefon"
+                               onkeypress='return event.charCode == 43 || event.charCode == 47 || (event.charCode >= 48 && event.charCode <= 57)'/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 p-lg-0">
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">14</h4>
+            </div>
+            <div class="col-lg-6 p-lg-0">
+                <p class="m-0" style="text-align: justify;"><span th:text="#{form.text14_1}"/></p>
+                <p th:text="'( max. ' + *{maxFileSize} + ' )'"></p>
+                <input name="files" id="files" th:field="*{files}" type="file" multiple="multiple" aria-label="files">
+            </div>
+            <div class="col-lg-2 p-lg-0">
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0">
+                <h4 class="title-number">15</h4>
+            </div>
+            <div class="col-lg-6 p-lg-0 form-group">
+                <p class="m-0" style="text-align: justify;"><span th:text="#{form.text15_1}"/></p>
+
+                <label class="form-check-label my-3 checkbox-long-label" for="checkboxZaverecnePotvrdenie">
+                    <input class="form-check-input" type="checkbox" th:checked="*{zaverecnePotvrdenie}" required id="checkboxZaverecnePotvrdenie">
+                    <span th:text="#{form.text15_2}"/>
+                </label>
+            </div>
+            <div class="col-lg-2 p-lg-0">
+            </div>
+        </div>
+
+        <div class="row py-3 hr-top">
+            <div class="col-lg-4 pl-lg-0"></div>
+            <div class="col-lg-6 p-lg-0 ">
+                <div class="row">
+                    <div class="col-6"><p><small>E-mail: <span th:text="*{email}"/></small></p></div>
+                    <div class="col-6 text-right">
+                        <input id="idSubmit" class="btn btn-primary" type="submit" form.odoslat th:value="#{form.submit}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 p-lg-0">
+            </div>
+        </div>
+    </form>
+
+    <span id="notification"></span>
+
+</div>
+
+<script>
+    var notificationWidget = $("#notification").kendoNotification({
+        position: {
+            top: null,
+            left: null,
+            bottom: 20,
+            right: 0
+        },
+    }).data("kendoNotification");
+
+    // Disable form submissions if there are invalid fields
+    (function() {
+      'use strict';
+      window.addEventListener('load', function() {
+        // Get the forms we want to add validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                var valid = true;
+
+                <!-- kontrola celkova velkost suborov -->
+                var upload = $("#files").data("kendoUpload"), files = upload.getFiles();
+                var filesSize = 0;
+                files.forEach(function(item) {
+                    filesSize=filesSize+item.size;
+                })
+
+                if(filesSize>[[${kendoMaxFileSize}]]){
+                     notificationWidget.show("[[#{notifikacia.celkova.velkost.suborou}]]", "warning");
+                     event.preventDefault();
+                     event.stopPropagation();
+                     valid=false;
+                }
+
+                <!-- kontrola duplicita mena suboru -->
+                exit_loops:
+                for (var i = 0; i < files.length; i++) {
+                    for (var j = i+1; j < files.length; j++) {
+                        if (files[i].name === files[j].name) {
+                            notificationWidget.show("[[#{notifikacia.duplicita.suboru}]]", "warning");
+                            event.preventDefault();
+                            event.stopPropagation();
+                            valid = false;
+                            break exit_loops;
+                        }
+                    }
+                }
+
+
+                <!-- kontrola vyplnene polia -->
+                if (form.checkValidity() === false) {
+                    var invalidDom =document.querySelectorAll(".form-control:invalid,  .custom-control-input:invalid, .form-check-input:invalid, .form-select:invalid");
+                    if(invalidDom[0]){
+                         $('html, body').animate({ scrollTop: $(invalidDom[0]).offset().top - 180}, 1000);
+                    }
+                    notificationWidget.show("[[#{toast.text}]]", "warning");
+                    event.preventDefault();
+                    event.stopPropagation();
+                    valid=false;
+                }
+                <!-- kontrola velkost suboru -->
+                if ( $("#files").closest('.k-upload').find('.k-file').length > 0 &&
+                    $("#files").closest(".k-upload").find(".k-file-invalid").length != 0) {
+                        notificationWidget.show("[[#{notifikacia.typ.velkost.suboru}]]", "warning");
+                        event.preventDefault();
+                        event.stopPropagation();
+                        valid = false;
+                }
+
+                form.classList.add('was-validated');
+                if(valid){
+                    $("#idSubmit").attr('disabled', 'disabled');
+                    kendo.ui.progress($("body"), true);
+                    $("body").css('overflow','hidden');
+                }
+
+            }, false);
+        });
+      }, false);
+    })();
+</script>
+
+<script type="text/javascript">
+
+    function langFnc(langPar) {
+        if (langPar != ''){
+            var url = location.href;
+            var position = url.search("&lang=");
+            if(position>0){
+                url = url.substr(0,position);
+            }
+            url = url + '&lang=' + langPar;
+            window.location.replace(url);
+        };
+    }
+
+    $(document).ready(function() {
+        $("form").attr('novalidate','novalidate');
+
+        <!-- ---------------------- KENDO ---------------------- -->
+        $(document).ready(function() {
+                $("#files").kendoUpload({
+                    validation: {
+                        allowedExtensions: [".pdf", ".docx", ".doc", ".xlsx", ".xls", ".pptx", ".ppt",
+                                            ".odt", ".ods", ".odp", ".tiff", ".jpg", ".jpeg", ".heif", ".hevc", ".gif",
+                                            ".bmp", ".mp4", ".mpg", ".mpeg", ".mov", ".m4v", ".avi", ".webm",
+                                            ".3gp", ".mp3", ".m4a", ".aac", ".amr", ".wav"],
+                                         maxFileSize: [[${kendoMaxFileSize}]],
+                    }
+                });
+        });
+    });
+
+
+
+</script>
+
+</body>
+</html>

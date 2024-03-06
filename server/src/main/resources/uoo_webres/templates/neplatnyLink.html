@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="sk">
+<head lang="sk">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="${@appProps.getBaseUrl() + '/css/bootstrap.min.css'}">
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+
+    <script th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/jquery-3.6.0.min.js" th:src="${@appProps.getBaseUrl() + '/js/jquery-3.6.0.min.js'}"></script>
+    <script th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/jquery-3.6.0.min.js" th:src="@{/js/jquery-3.6.0.min.js}"></script>
+
+    <script th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/bootstrap.bundle.min.js"
+            th:src="${@appProps.getBaseUrl() + '/js/bootstrap.bundle.min.js'}"></script>
+    <script th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/base.css" th:href="${@appProps.getBaseUrl() + '/css/base.css'}"/>
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="stylesheet" href="../static/css/base.css" th:href="@{/css/base.css}"/>
+
+    <link th:if="${!#strings.isEmpty(@appProps.getBaseUrl())}" rel="shortcut icon" href="../static/favicon.ico" th:href="${@appProps.getBaseUrl() + '/favicon.ico'}"/>
+    <link th:if="${#strings.isEmpty(@appProps.getBaseUrl())}" rel="shortcut icon" href="../static/favicon.ico" th:href="@{/favicon.ico}"/>
+
+    <title>Emailová adresa poslaná</title>
+</head>
+
+<body>
+
+<div class="container py-5">
+    <div class="row py-5">
+        <div class="col">
+            <H2 style="text-align:center"><span th:text="#{neplatnyLink.text1}"/></H2>
+            <br/>
+            <H5><span th:text="#{neplatnyLink.text2}"/></H5>
+            <UL>
+                <LI><span th:text="#{neplatnyLink.text3}"/></LI>
+                <LI><span th:text="#{neplatnyLink.text4}"/></LI>
+                <LI><span th:text="#{neplatnyLink.text5}"/></LI>
+            </UL>
+        </div>
+    </div>
+</div>
+</body>
+</html>
