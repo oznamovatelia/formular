@@ -36,6 +36,11 @@
         <!--        <docker.publishRegistry.username></docker.publishRegistry.username>-->
         <!--        <docker.publishRegistry.password></docker.publishRegistry.password>-->
         <!--        <docker.publish>false</docker.publish>-->
+
+            <docker.repository.url>nexus.softip.sk</docker.repository.url>
+            <docker.group>sk.softip.uoo</docker.group>
+
+
     </properties>
 
     <dependencies>
@@ -207,28 +212,10 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>softip</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <docker.repository.url>nexus.softip.sk</docker.repository.url>
-                <docker.group>sk.softip.uoo</docker.group>
-            </properties>
+
 
             <repositories>
-                <repository>
-                    <id>softip-mirror</id>
-                    <url>https://nexus.softip.sk/repository/maven-public/</url>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                </repository>
+
                 <repository>
                     <id>mvn_integration</id>
                     <url>https://mvnrepository.com/artifact/org.springframework.integration/spring-integration-core</url>
@@ -245,6 +232,5 @@
                     <url>http://maven.springframework.org/release</url>
                 </repository>
             </repositories>
-        </profile>
-    </profiles>
+
 </project>
