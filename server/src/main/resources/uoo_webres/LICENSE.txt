@@ -96,3 +96,4 @@ Dodatok
 —  Québec Free and Open-Source Licence – Reciprocity (LiLiQ-R) or Strong Reciprocity (LiLiQ-R+).
 Európska komisia môže tento dodatok aktualizovať, aby zahŕňal neskoršie verzie uvedených licencií, bez zavedenia novej verzie EUPL, pokiaľ uvedené licencie zabezpečujú práva udelené článkom 2 tejto licencie a chránia zdrojový kód, ktorý je jej predmetom, pred výhradným privlastnením.
 Všetky ostatné zmeny alebo doplnenia tohto dodatku si vyžadujú novú verziu EUPL.
+
