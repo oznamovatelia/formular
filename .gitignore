@@ -48,3 +48,7 @@ Thumbs.db
 *.mov
 *.wmv
 
+
+tor-working-dir/
+tor-working-dir2/
+

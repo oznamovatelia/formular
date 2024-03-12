@@ -98,3 +98,37 @@ Nasadenie aplikácie a torMail
 
 
 
+# **Rýchly štart**
+
+1. Nainštalovať Rancher desktop https://rancherdesktop.io/ - obsahuje K3s 
+2. Nainštalovať Helm charts https://helm.sh/
+3. vytvoriť image - mvn deploy
+
+
+## Bez TorMail
+4. Úprava  [values-formular.yaml](docker%2Fchart%2Fuoo%2Fvalues-formular.yaml) nastavit:
+    - sendEncryptedFormTo: zmenitAdresu@todo.sk
+    - baseUrlTorMail: # PRAZDNE 
+    - host: smtp.todo.sk 
+5. cd docker/chart/uoo
+6. helm install formular ./ -f values-formular.yaml
+
+## S TorMail
+
+4. Úprava  [values-formular.yaml](docker%2Fchart%2Fuoo%2Fvalues-formular.yaml) nastavit:
+   - sendEncryptedFormTo: zmenitAdresu@todo.sk
+   - host: smtp.todo.sk
+5. cd docker/chart/uoo
+6. helm install formular ./ -f values-formular.yaml
+
+7. Úprava [values-tormail.yaml](docker%2Fchart%2Fuoo%2Fvalues-tormail.yaml)  nastavit:
+   - sendEncryptedFormTo: zmenitAdresu@todo.sk
+   - torMail:
+     username: username
+     password: password
+     host: host.onion
+     port: 25
+     from: todo@todo.onion
+   -  mailFrom: noreply@noreply.sk
+8. cd docker/chart/uoo
+9. helm install tormail ./ -f values-formular.yaml
