@@ -132,3 +132,5 @@ Nasadenie aplikácie a torMail
    -  mailFrom: noreply@noreply.sk
 8. cd docker/chart/uoo
 9. helm install tormail ./ -f values-formular.yaml
+
+aplikácia beží na http://kubernetes.docker.internal/form/mail
