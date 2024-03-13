@@ -160,42 +160,5 @@ Pri odosielaní formulára sa kontroluje zoznam či obsahuje link a či link už
 Po vytvorení formular.zip.enc (zašifrovaný zip, ktorý obsahuje formulár a priložené súbory) sa skontroluje velkosť súboru. Pokiaľ prekračuje maxMailSize tak je súbor rozdelený do čiastkových zip
 suborov a poslaný po častiach.
 
-## Pridanie submodulu do projektu
 
-### Pridanie uuo_webres submodulu do adresara resources hlavneho projektu uuo
-
-1. Pridanie submodulu:
-   v uoo/server
-   ` git submodule add https://bitbucket.org/todo/uoo_webres.git src/main/resources/uoo_webres`
-
-2. Inicializácia a aktualizácia submodulu:
-   `git submodule update --init`
-
-#### Zmena verzie submodulu
-
-v uoo/server/src/main/resources/uoo_webres
-`git checkout [vetva]`
-
-### Dotiahnutie hlavného projektu - clone
-
-`git clone -b [vetva] https://bitbucket.org/todo/uoo.git --recursive`
-
-**--recursive** - dotiahnu sa aj submoduly
-
-Pokiaľ sa nepoužije --recursive tak sa submoduly dotiahnu príkazom:
-`git submodule update --init --recursive`
-
-### Aktualizácia submodulu
-`git submodule update --remote`
-
-### Zmean repository submodulu
-
-1. Zmena URL repozitára submodulu:
-    `git submodule set-url <submodule-path> <new-repository-url>`
-   3. Aktualizácia submodulu:
-    `git submodule update --init --recursive`
-4. Commit a push zmien
-   `git add .
-   git commit -m "Updated submodule to new repository"
-   git push`
 
