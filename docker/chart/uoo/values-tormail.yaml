@@ -55,14 +55,14 @@ configmap:
     server.port: 9001
     app:
       aesKey:
-        fileName: ./BOOT-INF/classes/link-aes.p12  #  cesta k súboru s aes kľúčom
+        fileName: /app/resources/link-aes.p12  #  cesta k súboru s aes kľúčom
         keyPassword: keystorePassword
         storePassword: keystorePassword
         alias: link
       captcha:
         site:
         secret:
-      pgpPublicKeyFilename: ./BOOT-INF/classes/pgp_public.asc # cesta k súboru s pgp kľúčom
+      pgpPublicKeyFilename: /app/resources/pgp_public.asc # cesta k súboru s pgp kľúčom
       sendEncryptedFormTo: test1@test.sk,test2@test.sk  # mailove adresy oddelene čiarkou test1@test.sk,test2@test.sk  # alebo premenna prostredia APP_SEND_ENCRYPTED_FORM_TO
       baseUrl: # V produkcii nebude možné “vypočítať” túto URL, lebo kontajner bude za gateway. Pokial je prazdna bude vypocitana
       #  baseUrlTorMail: http://localhost:9001 # url kde beží aplikácia s profilom torMail - pre posielanie tor mailov

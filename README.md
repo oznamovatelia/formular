@@ -1,9 +1,13 @@
 Popis sa nachádza aj v súbore server/README.md
 
-# UOO - Úrad na ochranu oznamovateľov #
+# Nahlasovací formulár #
 
 ## Buildovanie ##
 
+ **Java 11 JDK**
+
+ **Maven ver. 3.3.x a vyššia**
+ 
 buildovanie bez vytvorenia docker images
 
     mvn install 
@@ -137,15 +141,19 @@ Nasadenie aplikácie a torMail
 
 
 
-# **Rýchly štart**
+# **Rýchly štart v K3s**
 
 1. Nainštalovať Rancher desktop https://rancherdesktop.io/ - obsahuje K3s 
 2. Nainštalovať Helm charts https://helm.sh/
 4. Dotiahnuť zdrojový kód z gitu `git clone uoo_public.git` plus aktualizacia submodulov `git submodule update --init --recursive`
-5. vytvoriť image - mvn deploy
+5. build aplikácie + vytvoriť image -> mvn deploy
+
+Počas buildu sa vytvorí jar súbor, ktorý sa uloží do lokálneho maven repository. 
+Následne sa vytvorý docker image pomocou lokálneho Docker daemon.
+(Built image to Docker daemon as nexus.softip.sk/sk.softip.uoo/server:1.0.5-SNAPSHOT)
 
 
-## Bez TorMail
+## Naštartovanie aplikácie v K3s bez TorMail pomocou helm
 6. Úprava  [values-formular.yaml](docker%2Fchart%2Fuoo%2Fvalues-formular.yaml) nastavit:
     - sendEncryptedFormTo: zmenitAdresu@todo.sk
     - baseUrlTorMail: # PRAZDNE 
@@ -153,7 +161,7 @@ Nasadenie aplikácie a torMail
 7. cd docker/chart/uoo
 8. helm install formular ./ -f values-formular.yaml
 
-## S TorMail
+## Naštartovanie aplikácie v K3s s TorMail pomocou helm
 
 5. Úprava  [values-formular.yaml](docker%2Fchart%2Fuoo%2Fvalues-formular.yaml) nastavit:
    - sendEncryptedFormTo: zmenitAdresu@todo.sk
@@ -174,3 +182,7 @@ Nasadenie aplikácie a torMail
 10. helm install tormail ./ -f values-formular.yaml
 
 aplikácia beží na http://kubernetes.docker.internal/form/mail
+
+
+
+

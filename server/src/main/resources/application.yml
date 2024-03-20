@@ -32,7 +32,7 @@ app:
   maxMailSize: 10485760 # 10MB maximálna velkosť prilohy v maily. Pokial je prekročená tak priloha sa rozdeli do viacerých zip suborov. Každý súbor je poslany v samostatnom maily.
 
 org.tbk.tor:
-  enabled: true  # default is `true`
+  enabled: false  # default is `true`
   autoPublishEnabled: true # default is `true`
   working-directory: 'tor-working-dir'
   startup-timeout: 30s # default is `60s`
