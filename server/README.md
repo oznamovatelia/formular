@@ -1,96 +1,96 @@
-# 1. generovnie AES kluca pre sifrovanie linku
+# 1. generovanie AES kľúča pre šifrovanie linku
 
 ```
 Java\jdk-11.0.12\bin
 keytool -genseckey -keystore link-aes.p12 -storetype PKCS12 -storepass keystorePassword -keyalg AES -keysize 256 -alias link -keypass keystorePassword
-
 ```
-kluc **nakopirujem do projektu server->resources**
+kľúč **nakopírujem do projektu server->resources**
 
-zmenim parametre(filename, password...) v **application.yml v sekcii aesKey**
+zmením parametre (filename, password...) v **application.yml v sekcii aesKey**
 
 potrebné nastaviť v application.yml
 aesKey:
 fileName: link-aes.p12
 keyPassword: keystorePassword
-storePassword: keystorePassword  
+storePassword: keystorePassword
 alias: link
 
-chyba v keytool = keyPassword a storePassword musia byť rovnaké (možno nasledne zmeniť)
+chyba v keytool = keyPassword a storePassword musia byť rovnaké (možno následne zmeniť)
 
-# 2. pgp sifrovanie zip
+# 2. PGP šifrovanie zip
 
-download Kleopatra pre spravu pgp sifier 
+stiahni program Kleopatra pre správu PGP šifier
 ```
 https://gpg4win.org/get-gpg4win.html
 ```
 
 ```
-File->New Key Pair-> Create Personal OpenPGP key pair-> zadam heslo-> vygenerujem kluce a ulozim si ich
+File->New Key Pair-> Create Personal OpenPGP key pair-> zadám heslo-> vygenerujem kľúče a uložím si ich
 ```
-public kluc **nakopirujem do projektu server->resources**
+verejný kľúč **nakopírujem do projektu server->resources**
 
-zmenim parameter **pgpPublicKeyFilename v application.yml**
+zmením parameter **pgpPublicKeyFilename v application.yml**
 
 
 # Workflow a popis
 
 1.  http://localhost:9000/swagger-ui/index.html
 2.  API **/form/send-link**
-    
-    Vytvori sa objekt s parametrami dateTime a email. Objekt sa serializuje na string a tento "string" sa potom zasifruje pomocou **AES kluca**
-    
-    Metoda, ktora zasifruje tento "string" vrati naspat aj **IV vektor, ktory je potrebny na rozsifrovanie**
-    
-    Tento vektor **nezasifrovany** posleme v linku ako parameter nonce
-    
-    **Priklad linku:**
+
+    Vytvorí sa objekt s parametrami dateTime a email. Objekt sa serializuje na string a tento "string" sa potom zašifruje pomocou **AES kľúča**
+
+    Metóda, ktorá zašifruje tento "string" vráti naspäť aj **IV vektor, ktorý je potrebný na rozšifrovanie**
+
+    Tento vektor **nezašifrovaný** pošleme v linku ako parameter nonce
+
+    **Príklad linku:**
     ```
-    http://localhost:9000/form?payload={zasifrovanyPayload}&nonce={IV vektor}
+    http://localhost:9000/form?payload={zašifrovanýPayload}&nonce={IV vektor}
     ```
-    
-    Takyto link sa odosle na zadany email
-    
-    Do **rateLimit** si zaznamenam dateTime, email, nonce. Vid kod.
-    
-3.  pride mi email s linkom na formular
-4.  som presmerovany na **GET /form**
-    
-    Rozsifrujem si **payload** z requestu pomocou **toho isteho AES kluca ako v bode 2. a nonce(IV vektor) z requestu**.
-    
+
+    Takýto link sa odošle na zadaný email
+
+    Do **rateLimit** si zaznamenám dateTime, email, nonce. Viď kód.
+
+3.  príde mi email s linkom na formulár
+4.  som presmerovaný na **GET /form**
+
+    Rozšifrujem si **payload** z requestu pomocou **toho istého AES kľúča ako v bode 2. a nonce (IV vektor) z requestu**.
+
     Zdeserializujem "string" na objekt s dateTime a email
-    
-    Skontrolujem **rateLimit**, ci formular uz nebol predtym dotazovany. Vid kod.
-    
-    Redirect na **thymeleaf** template s formularom /form
-    
-5.  Vyplnim udaje, nahram subory a **submitnem** formular
-6. som presmerovany na **POST /form**
-    Skontrolujem rateLimit ci nebol formular predtym uz odoslany. Vid kod.
 
-   Zoberiem **template.docx (sablona s premennymi, ktore budem replacovat)**
+    Skontrolujem **rateLimit**, či formulár už nebol predtým dotazovaný. Viď kód.
 
-   Replacnem premenne v template.docx s premennymi z formulara
+    Redirect na **thymeleaf** template s formulárom /form
 
-   Vytvorim ZIP a vlozim do neho tento **docx a vsetky prilohy**
+5.  Vyplním údaje, nahrám súbory a **submitnem** formulár
+6.  som presmerovaný na **POST /form**
 
-   Tento ZIP zasifrujem pomocou **PGP kluca**
+    Skontrolujem rateLimit či nebol formulár predtým už odoslaný. Vid kód.
 
-   Odoslem na email
+   Zoberiem **template.docx (šablóna s premennými, ktoré budem nahradzovať)**
 
-7. Rozsifrujem
+   Nahradím premenné v template.docx s premennými z formulára
 
-   otvorim **Kleopatru**
+   Vytvorím ZIP a vložím do neho tento **docx a všetky prílohy**
 
-   klik **Decrypt/Verify** a vyberiem zip subor, ktory prisiel v maily
+   Tento ZIP zašifrujem pomocou **PGP kľúča**
 
-   Zadam heslo
+   Odošlem na email
+
+7.  Rozšifrujem
+
+   otvorím **Kleopatru**
+
+   klik **Decrypt/Verify** a vyberiem zip súbor, ktorý prišiel v maile
+
+   Zadám heslo
 
    **Hotovo**
 
 # LOGY
 
-**Logy su vypnuté** v application.yml.
+**Logy sú vypnuté** v application.yml.
 
 ```
 logging:
@@ -103,62 +103,57 @@ logging:
 ## Nginx
 
     /etc/nginx/nginx.conf
-       parameter client_max_body_size 
+       parameter client_max_body_size
 
-Pokiaľ je prekročená velkosť tak sa objavi exception 413 Request Entity Too Large (nginx1.23.1)
+Pokiaľ je prekročená veľkosť, tak sa objaví exception 413 Request Entity Too Large (nginx1.23.1)
 https://www.cyberciti.biz/faq/linux-unix-bsd-nginx-413-request-entity-too-large/
 
 ## Aplikácia - Tomcat
 
-nastavenie velkosti v application.yml
+nastavenie veľkosti v application.yml
 spring:
 servlet:
 multipart:
 max-file-size: 250MB
 max-request-size: 250MB
 
-Pokiaľ je prekročená veľkosť tak sa objavi exception org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException
+Pokiaľ je prekročená veľkosť, tak sa objaví exception org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException
 
-Frontend kontroluje veľkosť príloh a nedovolí odoslanie formu, ktorý obsahuje súbory s vačšou sumárnou velikostou ako max-file-size.
+Frontend kontroluje veľkosť príloh a nedovolí odoslanie formulára, ktorý obsahuje súbory s väčšou sumárnou veľkosťou ako max-file-size.
 
 ## SMTP server
 
-SMTP server má nastavenú max velkosť.
-Pokiaľ je prekročená velkosť, tak sa objavi exception org.springframework.mail.MailSendException: Failed messages: com.sun.mail.smtp.SMTPSendFailedException: 552 Message size exceeds maximum permitted
+SMTP server má nastavenú max veľkosť.
+Pokiaľ je prekročená veľkosť, tak sa objaví exception org.springframework.mail.MailSendException: Failed messages: com.sun.mail.smtp.SMTPSendFailedException: 552 Message size exceeds maximum permitted
 
-Aplikácia má parameter maxMailSize. Ak je príloha väčšia ako maxMailSize tak sa vytvára multipart zip a súbory sú posielané po jednom.
+Aplikácia má parameter maxMailSize. Ak je príloha väčšia ako maxMailSize, tak sa vytvára multipart zip a súbory sú posielané po jednom.
 
 # 4. Multijazyčnosť
 
-Základný jazyk je sk. Texty sa nachádzajú v messages.properties. Na formuláry je možné prepnúť jazyk na en. Texty pre en verziu sa nachádzajú
-v messages_en.properties.
+Základný jazyk je sk. Texty sa nachádzajú v messages.properties. Na formulári je možné prepnúť jazyk na en. Texty pre en verziu sa nachádzajú v messages_en.properties.
 
     en: http://localhost:9000/form/mail?lang=en
     sk: http://localhost:9000/form/mail?lang=sk
     sk: http://localhost:9000/form/mail
-    
+
     en: http://localhost:9000/form?payload=%2B8pLcU877SGQYxI699pZHrrdoMWc2saN1B7XlTo4BxjyJkOibwtU10kKxYvLpaPO%2BbsMVpxfmH6FzlnXZw5PoekBvColq5bIvAw2utX8PQEMKHHWRGM%3D&nonce=uZwzYcDbnf3%2BNsj3&lang=en
     sk: http://localhost:9000/form?payload=%2B8pLcU877SGQYxI699pZHrrdoMWc2saN1B7XlTo4BxjyJkOibwtU10kKxYvLpaPO%2BbsMVpxfmH6FzlnXZw5PoekBvColq5bIvAw2utX8PQEMKHHWRGM%3D&nonce=uZwzYcDbnf3%2BNsj3&lang=sk
     sk: http://localhost:9000/form?payload=%2B8pLcU877SGQYxI699pZHrrdoMWc2saN1B7XlTo4BxjyJkOibwtU10kKxYvLpaPO%2BbsMVpxfmH6FzlnXZw5PoekBvColq5bIvAw2utX8PQEMKHHWRGM%3D&nonce=uZwzYcDbnf3%2BNsj3
 
 # 5. Konfigurácia - application.yml
 
-**timeBetweenLinkRequests: 2** ---> čas po akom je možné znovu požiadať o link (minúty)
+**timeBetweenLinkRequests: 2** ---> čas, po akom je možné znovu požiadať o link (minúty)
 
-**linkTimeValidiry: 60** ---> ćasová platnosť linku – čas za ktorý je možné link použíť (minúty)
+**linkTimeValidity: 60** ---> časová platnosť linku – čas, za ktorý je možné link použiť (minúty)
 
-**rateLimitSchedulerDelay: 60000** --->  Perioda v akej sa spúšťa RateLimitScheduler, ktorý kontroluje zoznam s mailami.
+**rateLimitSchedulerDelay: 60000** --->  Perióda, v akej sa spúšťa RateLimitScheduler, ktorý kontroluje zoznam s mailami.
 Proces pri kontrole:
 
-1. vyhodí zo zoznamu tie záznamy ktoré prekročili časovú platnosť linku (linkTimeValidiry)
-2. vyhodí zo zoznamu tie záznamy ktoré boli použité a uplynul predpísaný čas potrebný pre opatovné poźiadanie o link (timeBetweenLinkRequests)
+1. vyhodí zo zoznamu tie záznamy, ktoré prekročili časovú platnosť linku (linkTimeValidity)
+2. vyhodí zo zoznamu tie záznamy, ktoré boli použité a uplynul predpísaný čas potrebný pre opätovné požiadenie o link (timeBetweenLinkRequests)
 
-Pri odosielaní formulára sa kontroluje zoznam či obsahuje link a či link už nebol použitý.
+Pri odosielaní formulára sa kontroluje zoznam, či obsahuje link a či link už nebol použitý.
 
-#### maxMailSize - maximálna velkosť prilohy v maily.
+#### maxMailSize - maximálna veľkosť prílohy v maile.
 
-Po vytvorení formular.zip.enc (zašifrovaný zip, ktorý obsahuje formulár a priložené súbory) sa skontroluje velkosť súboru. Pokiaľ prekračuje maxMailSize tak je súbor rozdelený do čiastkových zip
-suborov a poslaný po častiach.
-
-
-
+Po vytvorení formular.zip.enc (zašifrovaný zip, ktorý obsahuje formulár a priložené súbory) sa skontroluje veľkosť súboru. Pokiaľ prekračuje maxMailSize, tak je súbor rozdelený do čiastkových zip súborov a poslaný po častiach.
