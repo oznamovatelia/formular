@@ -1,0 +1,75 @@
+server.port: {SERVER_PORT}
+
+app:
+  aesKey:
+    fileName: {AESKEY_FILENAME}
+    keyPassword: {AESKEY_KEY_PASSWORD}
+    storePassword: {AESKEY_STORE_PASSWORD}
+    alias: {AESKEY_ALIAS}
+  captcha:
+    site: {CAPTCHA_SITE}
+    secret: {CAPTCHA_SECRET}
+  pgpPublicKeyFilename: {PGP_PUBLICKEY_FILENAME}
+  sendEncryptedFormTo: {ENCRYPTED_FORM_RECIPIENTS}
+  baseUrl: {BASE_URL}
+  baseUrlTorMail: {TORMAIL_BASE_URL}
+  env: {ENVIRONMENT_NAME}
+  rateLimitSchedulerDelay: {RATELIMIT_SCHEDULER_DELAY}
+  rateLimitSchedulerMaxDelay: {RATELIMIT_SCHEDULER_MAXDELAY}
+  torMail:
+    username: {TORMAIL_USERNAME}
+    password: {TORMAIL_PASSWORD}
+    host: {TORMAIL_HOST}
+    port: {TORMAIL_PORT}
+    from: {TORMAIL_FROM}
+  mailFrom: {MAIL_FROM}
+  timeBetweenLinkRequests: {TIME_BETWEEN_LINK_REQUESTS}
+  linkTimeValidiry: {LINK_TIME_VALIDITY}
+  proxy:
+    host: {PROXY_HOST}
+    port: {PROXY_PORT}
+  maxMailSize: {MAIL_MAXSIZE}
+org.tbk.tor:
+  enabled: {TORMAIL_ENABLED}
+  autoPublishEnabled: {TORMAIL_AUTOPUBLISH_ENABLED}
+  working-directory: {TORMAIL_WORKING_DIRECTORY}
+  startup-timeout: {TORMAIL_STARTUP_TIMEOUT}
+
+spring:
+  resources:
+    add-mappings: {SPRING_ADD_MAPPINGS}
+  servlet:
+    multipart:
+      file-size-threshold: {SPRING_FILESIZE_THRESHOLD}
+      location: {SPRING_LOCATION}
+      max-file-size: {SPRING_MAX_FILE_SIZE}
+      max-request-size: {SPRING_MAX_REQUEST_SIZE}
+  mail:
+    default-encoding: {MAIL_ENCODING}
+    host: {MAIL_HOST}
+    port: {MAIL_PORT}
+    username: {MAIL_USERNAME}
+    password: {MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: {MAIL_SMTP_AUTH}
+          starttls:
+            enable: {MAIL_STARTTLS_ENABLED}
+    protocol: {MAIL_PROTOCOL}
+    test-connection: {MAIL_TEST_CONNECTION}
+
+# vypnute logovanie
+logging:
+  level:
+    root: {LOGGING_LEVEL_ROOT}
+---
+spring:
+  profiles: torMail
+
+server.port: {TORMAIL_SERVER_PORT}
+
+org.tbk.tor:
+  enabled: {TORMAIL_ENABLED}
+  working-directory: {TORMAIL_WORKING_DIRECTORY}
+---

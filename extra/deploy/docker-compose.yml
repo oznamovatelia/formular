@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  uoo-formular:
+    build: .
+    image: uoo-formular:1.0.4
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./application.yml:/opt/uooform/application.yml
