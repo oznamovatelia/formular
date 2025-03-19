@@ -86,7 +86,7 @@ Pokiaľ nie je vyplnená `captcha.site` v `application.yml`, tak sa captcha nezo
 
 1. Pridanie submodulu:
    v `uoo/server`:
-   `git submodule add https://bitbucket.org/todo/uoo_webres.git src/main/resources/uoo_webres`
+   `git submodule add https://github.com/oznamovatelia/formular-resources.git src/main/resources/uoo_webres`
 
 2. Inicializácia a aktualizácia submodulu:
    `git submodule update --init`
